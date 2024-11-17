@@ -10,7 +10,8 @@ const ModalUpdateUser = (props) => {
   const [job, setJob] = useState("");
 
   const handleUpdateUser = async () => {
-    let res = await putUpdateUser(name, job);
+    let res = await putUpdateUser(name, job, dataUserUpdate.id);
+    console.log(res);
     if (res && res.updateAt) {
       handleUpdateUserFromModal({
         first_name: name,
@@ -53,7 +54,7 @@ const ModalUpdateUser = (props) => {
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                 />
-                <div id="emailHelp" className="form-text"></div>
+                <div className="form-text"></div>
               </div>
               <div className="mb-3">
                 <label className="form-label">Job</label>
