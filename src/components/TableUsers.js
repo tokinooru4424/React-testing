@@ -2,11 +2,18 @@ import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { fetchAllUser } from "../services/userService";
 import ReactPaginate from "react-paginate";
+import ModalAddNewUser from "./ModalAddNewUser";
 
 const TableUsers = () => {
   const [listUsers, setListUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
+  const [isShowModalAddNewUser, setIsShowModalAddNewUser] = useState(false);
+
+  const handleClose = () => {
+    setIsShowModalAddNewUser(false);
+  };
 
   useEffect(() => {
     getUsers(1);
@@ -25,8 +32,25 @@ const TableUsers = () => {
     getUsers(+event.selected + 1);
   };
 
+  const handleUpdateTable = (user) => {
+    setListUsers([user, ...listUsers]);
+  };
+
   return (
     <>
+      <div className="my-3 add-new">
+        <span>
+          <b>
+            <h3>List Users: </h3>
+          </b>
+        </span>
+        <button
+          className="btn btn-success "
+          onClick={() => setIsShowModalAddNewUser(true)}
+        >
+          Add new user
+        </button>
+      </div>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -69,6 +93,11 @@ const TableUsers = () => {
         containerClassName="pagination"
         activeClassName="active"
         renderOnZeroPageCount={null}
+      />
+      <ModalAddNewUser
+        show={isShowModalAddNewUser}
+        handleClose={handleClose}
+        handleUpdateTable={handleUpdateTable}
       />
     </>
   );
