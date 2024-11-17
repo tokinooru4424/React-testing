@@ -3,6 +3,7 @@ import Table from "react-bootstrap/Table";
 import { fetchAllUser } from "../services/userService";
 import ReactPaginate from "react-paginate";
 import ModalAddNewUser from "./ModalAddNewUser";
+import ModalUpdateUser from "./ModalUpdateUser";
 
 const TableUsers = () => {
   const [listUsers, setListUsers] = useState([]);
@@ -10,9 +11,12 @@ const TableUsers = () => {
   const [totalPages, setTotalPages] = useState(0);
 
   const [isShowModalAddNewUser, setIsShowModalAddNewUser] = useState(false);
+  const [isShowModalUpdate, setIsShowModalUpdate] = useState(false);
+  const [dataUserUpdate, setDataUserUpdate] = useState({});
 
   const handleClose = () => {
     setIsShowModalAddNewUser(false);
+    setIsShowModalUpdate(false);
   };
 
   useEffect(() => {
@@ -34,6 +38,11 @@ const TableUsers = () => {
 
   const handleUpdateTable = (user) => {
     setListUsers([user, ...listUsers]);
+  };
+
+  const handleUpdateUser = (user) => {
+    setDataUserUpdate(user);
+    setIsShowModalUpdate(true);
   };
 
   return (
@@ -58,6 +67,7 @@ const TableUsers = () => {
             <th>Email</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -70,6 +80,15 @@ const TableUsers = () => {
                   <td>{item.email}</td>
                   <td>{item.first_name}</td>
                   <td>{item.last_name}</td>
+                  <td>
+                    <button
+                      className="btn btn-warning mx-3"
+                      onClick={() => handleUpdateUser(item)}
+                    >
+                      Update
+                    </button>
+                    <button className="btn btn-danger">Delete</button>
+                  </td>
                 </tr>
               );
             })}
@@ -98,6 +117,11 @@ const TableUsers = () => {
         show={isShowModalAddNewUser}
         handleClose={handleClose}
         handleUpdateTable={handleUpdateTable}
+      />
+      <ModalUpdateUser
+        show={isShowModalUpdate}
+        handleClose={handleClose}
+        dataUserUpdate={dataUserUpdate}
       />
     </>
   );
