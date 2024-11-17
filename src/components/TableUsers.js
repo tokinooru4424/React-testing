@@ -5,6 +5,7 @@ import ReactPaginate from "react-paginate";
 import ModalAddNewUser from "./ModalAddNewUser";
 import ModalUpdateUser from "./ModalUpdateUser";
 import _ from "lodash";
+import ModalDeleteUser from "./ModalDeleteUser";
 
 const TableUsers = () => {
   const [listUsers, setListUsers] = useState([]);
@@ -14,10 +15,13 @@ const TableUsers = () => {
   const [isShowModalAddNewUser, setIsShowModalAddNewUser] = useState(false);
   const [isShowModalUpdate, setIsShowModalUpdate] = useState(false);
   const [dataUserUpdate, setDataUserUpdate] = useState({});
+  const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+  const [dataUserDelete, setDataUserDelete] = useState({});
 
   const handleClose = () => {
     setIsShowModalAddNewUser(false);
     setIsShowModalUpdate(false);
+    setIsShowModalDelete(false);
   };
 
   useEffect(() => {
@@ -50,6 +54,18 @@ const TableUsers = () => {
     let cloneListUsers = _.cloneDeep(listUsers);
     let index = listUsers.findIndex((item) => item.id === user.id);
     cloneListUsers[index].first_name = user.first_name;
+    setListUsers(cloneListUsers);
+  };
+
+  const handleDeleteUser = (user) => {
+    setIsShowModalDelete(true);
+    setDataUserDelete(user);
+  };
+
+  const handleDeleteUserFromModal = (user) => {
+    let cloneListUsers = _.cloneDeep(listUsers);
+    cloneListUsers = cloneListUsers.filter((item) => item.id !== user.id);
+
     setListUsers(cloneListUsers);
   };
 
@@ -95,7 +111,12 @@ const TableUsers = () => {
                     >
                       Update
                     </button>
-                    <button className="btn btn-danger">Delete</button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDeleteUser(item)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               );
@@ -132,6 +153,12 @@ const TableUsers = () => {
         dataUserUpdate={dataUserUpdate}
         handleUpdateTable={handleUpdateTable}
         handleUpdateUserFromModal={handleUpdateUserFromModal}
+      />
+      <ModalDeleteUser
+        show={isShowModalDelete}
+        handleClose={handleClose}
+        dataUserDelete={dataUserDelete}
+        handleDeleteUserFromModal={handleDeleteUserFromModal}
       />
     </>
   );
