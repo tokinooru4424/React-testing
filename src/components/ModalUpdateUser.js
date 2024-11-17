@@ -1,14 +1,26 @@
 import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { postCreateUser } from "../services/userService";
+import { putUpdateUser } from "../services/userService";
 import { toast } from "react-toastify";
 
 const ModalUpdateUser = (props) => {
-  const { handleClose, show, dataUserUpdate } = props;
+  const { handleClose, show, dataUserUpdate, handleUpdateUserFromModal } =
+    props;
   const [name, setName] = useState("");
   const [job, setJob] = useState("");
 
-  const handleUpdateUser = () => {};
+  const handleUpdateUser = async () => {
+    let res = await putUpdateUser(name, job);
+    if (res && res.updateAt) {
+      handleUpdateUserFromModal({
+        first_name: name,
+        id: dataUserUpdate.id,
+      });
+
+      handleClose();
+      toast.success("Update user succeed");
+    }
+  };
 
   useEffect(() => {
     if (show) {
@@ -22,7 +34,12 @@ const ModalUpdateUser = (props) => {
         className="modal show"
         style={{ display: "block", position: "initial" }}
       >
-        <Modal show={show} onHide={handleClose}>
+        <Modal
+          show={show}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+        >
           <Modal.Header closeButton>
             <Modal.Title>Update user</Modal.Title>
           </Modal.Header>
