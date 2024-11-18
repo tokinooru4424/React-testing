@@ -128,7 +128,7 @@ const TableUsers = () => {
         complete: function (results) {
           let rawCSV = results.data;
           if (rawCSV.length > 0) {
-            if (rawCSV[0] && +rawCSV[0].length === 3) {
+            if (rawCSV[0] && rawCSV[0].length === 3) {
               if (
                 rawCSV[0][0] !== "email" ||
                 rawCSV[0][1] !== "first_name" ||
@@ -138,7 +138,7 @@ const TableUsers = () => {
               } else {
                 let result = [];
                 rawCSV.map((item, index) => {
-                  if (index > 0 && +item.length === 3) {
+                  if (index > 0 && item.length === 3) {
                     let obj = {};
                     obj.email = item[0];
                     obj.first_name = item[1];
