@@ -11,8 +11,9 @@ const ModalUpdateUser = (props) => {
 
   const handleUpdateUser = async () => {
     let res = await putUpdateUser(name, job, dataUserUpdate.id);
+
     console.log(res);
-    if (res && res.updateAt) {
+    if (res) {
       handleUpdateUserFromModal({
         first_name: name,
         id: dataUserUpdate.id,
