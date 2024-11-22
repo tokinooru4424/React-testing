@@ -14,7 +14,20 @@ instance.interceptors.response.use(
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return Promise.reject(error);
+    let res = {};
+    if (error.response) {
+      //Request made and sever responded
+      res.data = error.response.data;
+      res.status = error.response.status;
+      res.status = error.response.headers;
+    } else if (error.resquest) {
+      //The request was made but no response was received
+      console.log(error.resquest);
+    } else {
+      //Something happened in setting up the request that triggered an Error
+      console.log("Error", error.message);
+    }
+    return res;
   }
 );
 

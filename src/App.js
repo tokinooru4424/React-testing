@@ -1,16 +1,25 @@
 import Container from "react-bootstrap/esm/Container";
 import "./App.scss";
 import Header from "./components/Header";
-import TableUsers from "./components/TableUsers";
 import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
+import AppRoutes from "./routes/AppRoutes";
+import { handleRefresh } from "./redux/actions/userAction";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      dispatch(handleRefresh());
+    }
+  }, []);
   return (
     <>
       <div className="app-container">
         <Header />
         <Container>
-          <TableUsers />
+          <AppRoutes />
         </Container>
       </div>
       <ToastContainer

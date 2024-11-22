@@ -124,11 +124,10 @@ const TableUsers = () => {
         return;
       }
       Papa.parse(file, {
-        header: true,
         complete: function (results) {
           let rawCSV = results.data;
           if (rawCSV.length > 0) {
-            if (rawCSV[0] && +rawCSV[0].length === 3) {
+            if (rawCSV[0] && rawCSV[0].length === 3) {
               if (
                 rawCSV[0][0] !== "email" ||
                 rawCSV[0][1] !== "first_name" ||
@@ -137,17 +136,17 @@ const TableUsers = () => {
                 toast.error("Wrong format header CSV file");
               } else {
                 let result = [];
+
                 rawCSV.map((item, index) => {
-                  if (index > 0 && +item.length === 3) {
+                  if (index > 0 && item.length === 3) {
                     let obj = {};
                     obj.email = item[0];
                     obj.first_name = item[1];
                     obj.last_name = item[2];
                     result.push(obj);
                   }
-                  setListUsers(result);
-                  console.log(result);
                 });
+                setListUsers(result);
               }
             } else {
               toast.error("Wrong format CSV file");
@@ -198,7 +197,7 @@ const TableUsers = () => {
           </button>
         </div>
       </div>
-      <div className="col-4 my-3">
+      <div className="col-12 col-sm-4 my-3">
         <input
           className="form-control"
           placeholder="Search user by email...."
