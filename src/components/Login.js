@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postLogin } from "../services/userService";
+import { handleLoginRedux } from "../redux/actions/userAction";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = (props) => {
   const [email, setEmail] = useState("");
@@ -9,14 +10,10 @@ const Login = (props) => {
   const navigate = useNavigate();
   const [isShowPassword, setIsShowPassword] = useState(false);
 
-  const [loadingAPI, setLoadingAPI] = useState(false);
+  const isLoading = useSelector((state) => state.user.isLoading);
+  const account = useSelector((state) => state.user.account);
 
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-    if (token) {
-      navigate("/");
-    }
-  }, []);
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     //validate
@@ -24,19 +21,25 @@ const Login = (props) => {
       toast.error("Email/Password is required!");
       return;
     }
-    setLoadingAPI(true);
-    let res = await postLogin(email, password);
-    if (res && res.token) {
-      localStorage.setItem("token", res.token);
-      navigate("/");
-    } else {
-      //error
-      if (res && res.status === 400) {
-        toast.error(res.data.error);
-      }
-    }
-    setLoadingAPI(false);
+
+    dispatch(handleLoginRedux(email, password));
   };
+
+  const handleGoback = () => {
+    navigate("/");
+  };
+
+  const handlePressEnter = (event) => {
+    if (event && event.key === "Enter") {
+      handleLogin();
+    }
+  };
+
+  useEffect(() => {
+    if (account && account.auth === true) {
+      navigate("/");
+    }
+  }, [account]);
 
   return (
     <>
@@ -55,6 +58,7 @@ const Login = (props) => {
             placeholder="Password..."
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            onKeyDown={(event) => handlePressEnter(event)}
           />
           <i
             className={
@@ -67,13 +71,15 @@ const Login = (props) => {
         </div>
         <button
           className={email && password ? "active" : ""}
-          disabled={(email && password) || loadingAPI ? false : true}
+          disabled={email && password ? false : true}
           onClick={handleLogin}
         >
-          {loadingAPI && <i className="fa-solid fa-circle-notch fa-spin"></i>}
+          {isLoading && <i className="fa-solid fa-circle-notch fa-spin"></i>}
           &nbsp;Login
         </button>
-        <div className="back"> &#60;&#60;Go back</div>
+        <div className="back" onClick={() => handleGoback()}>
+          &#60;&#60;Go back
+        </div>
       </div>
     </>
   );

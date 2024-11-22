@@ -2,22 +2,24 @@ import Container from "react-bootstrap/esm/Container";
 import "./App.scss";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
-import Home from "./components/Home";
-import { Routes, Route, Link } from "react-router-dom";
-import TableUsers from "./components/TableUsers";
-import Login from "./components/Login";
+import { useEffect } from "react";
+import AppRoutes from "./routes/AppRoutes";
+import { handleRefresh } from "./redux/actions/userAction";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      dispatch(handleRefresh());
+    }
+  }, []);
   return (
     <>
       <div className="app-container">
         <Header />
         <Container>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/users" element={<TableUsers />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
+          <AppRoutes />
         </Container>
       </div>
       <ToastContainer
